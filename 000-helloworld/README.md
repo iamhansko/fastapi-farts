@@ -1,4 +1,4 @@
-# FastAPI-Farts
+# Hello World
 
 ### Requirements
 - Install Docker or Docker Desktop
