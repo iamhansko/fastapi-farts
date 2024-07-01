@@ -54,14 +54,17 @@
 ```bash
 docker compose run --entrypoint "poetry install --no-root" fastapi-app
 docker compose up -d
-# DB Migration
-docker compose exec fastapi-app poetry run python -m api.migrate_db
 ```
 
 ### DB Connection
 ```bash
 docker compose up -d
 docker compose exec db mysql demo
+```
+
+### DB Migration
+```bash
+docker compose exec fastapi-app poetry run python -m api.migrate_db
 ```
 
 ### Test

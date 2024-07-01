@@ -1,15 +1,35 @@
-from sqlalchemy import create_engine
+from sqlalchemy.exc import InternalError, OperationalError
+from sqlalchemy import create_engine, text
 
 from api.models.task import Base
+from api.db import DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
 
 # 마이그레이션 작업은 자주 수행하거나 빠른 속도 요구하지 않으므로 비동기화 필요 X
 # 굳이 aiomysql 사용하는 대신 pymysql 유지 
-DB_URL = "mysql+pymysql://root@db:3306/demo?charset=utf8"
-engine = create_engine(DB_URL, echo=True)
+DB_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/?charset=utf8"
+DEMO_DB_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/demo?charset=utf8"
 
-def reset_database():
+engine = create_engine(DEMO_DB_URL, echo=True)
+
+def database_exists():
+  try:
+    engine.connect()
+    return True
+  except (OperationalError, InternalError) as e:
+    print(e)
+    print("Database does not exist")
+    return False
+
+def create_database():
+  if not database_exists():
+    root = create_engine(DB_URL, echo=True)
+    with root.connect() as conn:
+      conn.execute(text("CREATE DATABASE demo"))
+    print("Database created")
+  
   Base.metadata.drop_all(bind=engine)
   Base.metadata.create_all(bind=engine)
+  print("Tables created")
 
 if __name__=="__main__":
-  reset_database()
+  create_database()

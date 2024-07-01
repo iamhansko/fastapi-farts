@@ -4,11 +4,15 @@ services:
     build: .
     volumes:
       - .dockervenv:/src/.venv
-      - .:/src
+      # - .:/src
     ports:
       - 8000:8000
     environment:
-      - WATCHFILES_FORCE_POLLING=true #for hot reload
+      - WATCHFILES_FORCE_POLLING=true # for hot reload
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
   db:
     image: mysql:8.0
     platform: linux/x86_64
@@ -21,5 +25,12 @@ services:
     command: --default-authentication-plugin=mysql_native_password # MySQL 8.0 default value : "caching_sha2_password"
     ports:
       - 33306:3306
+    healthcheck:
+      test: ["CMD", "/usr/bin/mysql", "$MYSQL_DATABASE"]
+      # test: ["CMD", "/usr/bin/mysql", "--user=root", "--password=rootpassword", "$MYSQL_DATABASE"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 volumes:
   mysql_data:
