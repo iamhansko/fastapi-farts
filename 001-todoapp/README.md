@@ -12,16 +12,30 @@
 ```
 📦todoapp
  ┣ 📂api
- ┃ ┣ 📂cruds
- ┃ ┃ ┗ 📜__init__.py
- ┃ ┣ 📂models
- ┃ ┃ ┗ 📜__init__.py
- ┃ ┣ 📂routers
- ┃ ┃ ┗ 📜__init__.py
- ┃ ┣ 📂shemas
- ┃ ┃ ┗ 📜__init__.py
- ┃ ┣ 📜main.py
- ┃ ┗ 📜__init__.py
+ ┃  ┣ 📂cruds
+ ┃  ┃ ┣ 📂__pycache__
+ ┃  ┃ ┣ 📜done.py
+ ┃  ┃ ┣ 📜task.py
+ ┃  ┃ ┗ 📜__init__.py
+ ┃  ┣ 📂models
+ ┃  ┃ ┣ 📂__pycache__
+ ┃  ┃ ┣ 📜task.py
+ ┃  ┃ ┗ 📜__init__.py
+ ┃  ┣ 📂routers
+ ┃  ┃ ┣ 📂__pycache__
+ ┃  ┃ ┣ 📜done.py
+ ┃  ┃ ┣ 📜task.py
+ ┃  ┃ ┗ 📜__init__.py
+ ┃  ┣ 📂schemas
+ ┃  ┃ ┣ 📂__pycache__
+ ┃  ┃ ┣ 📜done.py
+ ┃  ┃ ┣ 📜task.py
+ ┃  ┃ ┗ 📜__init__.py
+ ┃  ┣ 📂__pycache__
+ ┃  ┣ 📜db.py
+ ┃  ┣ 📜main.py
+ ┃  ┣ 📜migrate_db.py
+ ┃  ┗ 📜__init__.py
  ┣ 📜.gitignore
  ┣ 📜docker-compose.yaml
  ┣ 📜Dockerfile
@@ -42,7 +56,6 @@
 ```bash
 docker compose run --entrypoint "poetry install --no-root" fastapi-app
 docker compose up -d
-
 # DB Migration
 docker compose exec fastapi-app poetry run python -m api.migrate_db
 ```
