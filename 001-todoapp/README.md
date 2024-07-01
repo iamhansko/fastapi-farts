@@ -13,28 +13,26 @@
 📦todoapp
  ┣ 📂api
  ┃  ┣ 📂cruds
- ┃  ┃ ┣ 📂__pycache__
  ┃  ┃ ┣ 📜done.py
  ┃  ┃ ┣ 📜task.py
  ┃  ┃ ┗ 📜__init__.py
  ┃  ┣ 📂models
- ┃  ┃ ┣ 📂__pycache__
  ┃  ┃ ┣ 📜task.py
  ┃  ┃ ┗ 📜__init__.py
  ┃  ┣ 📂routers
- ┃  ┃ ┣ 📂__pycache__
  ┃  ┃ ┣ 📜done.py
  ┃  ┃ ┣ 📜task.py
  ┃  ┃ ┗ 📜__init__.py
  ┃  ┣ 📂schemas
- ┃  ┃ ┣ 📂__pycache__
  ┃  ┃ ┣ 📜done.py
  ┃  ┃ ┣ 📜task.py
  ┃  ┃ ┗ 📜__init__.py
- ┃  ┣ 📂__pycache__
  ┃  ┣ 📜db.py
  ┃  ┣ 📜main.py
  ┃  ┣ 📜migrate_db.py
+ ┃  ┗ 📜__init__.py
+ ┣ 📂tests
+ ┃  ┣ 📜test_main.py
  ┃  ┗ 📜__init__.py
  ┣ 📜.gitignore
  ┣ 📜docker-compose.yaml
@@ -66,8 +64,15 @@ docker compose up -d
 docker compose exec db mysql demo
 ```
 
+### Test
+```bash
+docker compose up -d
+docker compose run --entrypoint "poetry run pytest" fastapi-app
+```
+
 ### Package Installation
 ```bash
 docker compose up -d
 docker compose exec fastapi-app poetry add PACKAGE_TO_INSTALL
 ```
+

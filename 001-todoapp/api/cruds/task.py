@@ -17,6 +17,7 @@ async def get_task_with_done(db:AsyncSession) -> list[tuple[int, str, bool]]:
     select(
       task_model.Task.id,
       task_model.Task.title,
+      task_model.Task.due_date,
       task_model.Done.id.isnot(None).label("done"), # Done.id(o)->done=True, Done.id(x)->done=False
     ).outerjoin(task_model.Done)
   )
@@ -30,6 +31,7 @@ async def get_task(db:AsyncSession, task_id:int) -> task_model.Task | None:
 
 async def update_task(db:AsyncSession, task_create:task_schema.TaskCreate, original:task_model.Task) -> task_model.Task:
   original.title = task_create.title
+  original.due_date = task_create.due_date
   db.add(original)
   await db.commit()
   await db.refresh(original)
