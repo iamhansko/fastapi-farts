@@ -5,8 +5,9 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /src
 
 RUN pip install "poetry==1.6.1"
-COPY pyproject.toml* poetry.lock* ./
+COPY pyproject.toml poetry.lock ./
 RUN poetry config virtualenvs.in-project true
-RUN if [-f pyproject.toml]; then poetry install --no-root; fi
+RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
+COPY api api
 
 ENTRYPOINT [ "poetry", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--reload" ]

@@ -58,7 +58,6 @@ docker compose up -d
 
 ### DB Connection
 ```bash
-docker compose up -d
 docker compose exec db mysql demo
 ```
 
@@ -69,13 +68,11 @@ docker compose exec fastapi-app poetry run python -m api.migrate_db
 
 ### Test
 ```bash
-docker compose up -d
 docker compose run --entrypoint "poetry run pytest" fastapi-app
 ```
 
 ### Package Installation
 ```bash
-docker compose up -d
 docker compose exec fastapi-app poetry add PACKAGE_TO_INSTALL
 ```
 

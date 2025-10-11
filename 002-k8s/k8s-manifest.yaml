@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      containers:
+      - name: fastapi
+        image: sce06147/fastapi-todo-app:latest
+        ports:
+        - containerPort: 8000
+        command:
+          - "bash"
+          - "-c"
+          - "poetry run python -m api.migrate_db && ./entrypoint.sh"
+        env:
+        - name: WATCHFILES_FORCE_POLLING
+          value: "true"
+        - name: DB_HOST
+          value: "localhost"
+        - name: DB_PORT
+          value: "3306"
+      - name: mysql
+        image: mysql:8.0
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        - name: MYSQL_DATABASE
+          value: "demo"
+        - name: TZ
+          value: "Asia/Seoul"
+        volumeMounts:
+        - name: gp3-volume
+          mountPath: /var/lib/mysql
+      - name: dnsutils
+        image: registry.k8s.io/e2e-test-images/agnhost:2.39
+      restartPolicy: Always
+      volumes:
+      - name: gp3-volume
+        persistentVolumeClaim:
+          claimName: gp3-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-service
+spec:
+  selector:
+    app: todo-app
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+spec:
+  ingressClassName: a
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: todo-service
+              port:
+                number: 8000
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+parameters:
+  type: gp3
+provisioner: ebs.csi.aws.com
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gp3-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp3
+  resources:
+    requests:
+      storage: 3Gi

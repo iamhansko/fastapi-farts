@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /src
 
 RUN pip install poetry
-COPY pyproject.toml* poetry.lock* ./
+COPY pyproject.toml poetry.lock ./
 
 COPY api api
 COPY tests tests
